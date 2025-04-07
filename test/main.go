@@ -1,6 +1,6 @@
 package main
 
-import "github.com/thanover/go-logger"
+import logger "github.com/thanover/gologger"
 
 func main() {
 	logger := logger.MakeLogger("./log")
