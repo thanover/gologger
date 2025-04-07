@@ -7,7 +7,9 @@ import (
 	"time"
 )
 
-type logger struct {
+var AppLogger Logger
+
+type Logger struct {
 	Dir  string
 	File *os.File
 }
@@ -29,10 +31,14 @@ const (
 	reset = "\033[0m"
 )
 
-func MakeLogger(dir string) logger {
+func Initialize(dir string) {
 	makeDir(dir)
 	file := makeFile(dir)
-	return logger{Dir: dir, File: file}
+	AppLogger = Logger{Dir: dir, File: file}
+}
+
+func GetLogger() Logger {
+	return AppLogger
 }
 
 func makeDir(dir string) {
@@ -52,23 +58,23 @@ func makeFile(dir string) *os.File {
 	return file
 }
 
-func (l logger) Info(input string) {
+func (l Logger) Info(input string) {
 	l.log(input, "INFO", blue)
 }
 
-func (l logger) Warn(input string) {
+func (l Logger) Warn(input string) {
 	l.log(input, "WARN", yellow)
 }
 
-func (l logger) Error(input string) {
+func (l Logger) Error(input string) {
 	l.log(input, "ERROR", red)
 }
 
-func (l logger) Success(input string) {
+func (l Logger) Success(input string) {
 	l.log(input, "SUCCESS", green)
 }
 
-func (l logger) log(input, level, color string) {
+func (l Logger) log(input, level, color string) {
 	m := msg{Raw: input, Level: level}
 	m.fmtMsg(color)
 	m.logToConsole()
@@ -81,7 +87,7 @@ func (m msg) logToConsole() {
 	fmt.Println(m.ConsoleMsg)
 }
 
-func (l logger) writeToFile(m msg) {
+func (l Logger) writeToFile(m msg) {
 	_, err := l.File.WriteString(fmt.Sprintln(m.FileMsg))
 	if err != nil {
 		fmt.Println("Error writing to file:", err)
