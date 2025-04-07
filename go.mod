@@ -1,3 +1,3 @@
-module github.com/thanover/logger
+module github.com/thanover/gologger
 
 go 1.24
