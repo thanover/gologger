@@ -1,1 +1,1 @@
-# gologger
+# go-logger
